@@ -1,0 +1,74 @@
+
+
+
+
+
+go to website github.ruggedboard  go to at91bootstrap repository . open at91bootstrap_v3.8 branch
+
+cick on code
+download zip file and extract that
+
+
+open this path /Downloads/at91bootstrap-rba5d2x-at91bootstrap-rba5d2x_v3.8.12/board/rugged_board_a5d2x in terminal
+
+ctags -R *
+
+
+cd ../../
+
+
+/opt/poky-tiny/2.5.2/environment-setup-cortexa5hf-neon-poky-linux-musleabi
+
+make rugged_board_a5d2xqspi_uboot_defconfig
+
+
+vi .config
+
+
+change in config banner 
+
+
+make
+
+cd binaries
+
+mv rugged_board_a5d2x-dataflashboot--3.8.12.bin BOOT.BIN
+
+
+
+cp BOOT.BIN /var/lib/tftpboot/
+
+
+
+
+in rugged board terminal type 
+
+
+
+setenv ipaddr 192.168.1.20
+setenv serverip 192.168.1.247
+ping 192.168.1.247
+saveenv
+
+
+
+sf probe
+tftp 0x22000000 BOOT.BIN
+sf erase 0x0 0x10000
+sf write 0x22000000 0x0 0x10000
+
+
+
+
+boot
+
+
+
+
+
+
+
+
+
+
+

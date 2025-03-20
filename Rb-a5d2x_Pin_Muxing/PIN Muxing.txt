@@ -1,0 +1,121 @@
+                       -----------------------------------------------------------------------------------------------------------------------------
+                                                                    PIN MUXING PROCESS
+                      -------------------------------------------------------------------------------------------------------------------------------
+                      
+                      
+Step 1 :Cloning the git repository linux-rba5d2x
+  
+  git clone https://github.com/rugged-board/linux-rba5d2x.git
+  
+  
+Step 2 :After clone the git you have to go directory as;
+        
+        linux-rba5d2x/arch/arm/boot/dts
+        
+        - vi a5d2x-rugged_board_common.dtsi   // we have to modify in this device tree file "
+              For Example:
+                     
+          In RBa52x have expansion header i have to enable the reciver pin for that you have to refer the rba5d2x schematic for which FLEXCOM we have to use 
+                     
+          You have to use the FLEXCOM3
+             
+             flx3: flexcom@fc014000 {
+				atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_USART>;
+				status = "okay";
+
+				uart7: serial@200 {
+					compatible = "atmel,at91sam9260-usart";
+					reg = <0x200 0x200>;
+					interrupts = <22 IRQ_TYPE_LEVEL_HIGH 7>;
+					clocks = <&flx3_clk>;
+					clock-names = "usart";
+					pinctrl-names = "default";
+					pinctrl-0 = <&pinctrl_flx3_default>;                    // * Default the FLEXCOM3 is Disabled you have to make "okay" *//
+					atmel,fifo-size = <32>;
+					status = "okay"; /* Conflict with isc. */
+				};
+
+				spi2: spi@400 {
+					compatible = "atmel,at91rm9200-spi";
+					reg = <0x400 0x200>;
+					interrupts = <22 IRQ_TYPE_LEVEL_HIGH 7>;
+					clocks = <&flx3_clk>;
+					clock-names = "spi_clk";
+					pinctrl-names = "default";
+					pinctrl-0 = <&pinctrl_flx3_default>;
+					atmel,fifo-size = <16>;
+				        status = "disabled"; /* Conflict with isc. */
+				};
+			};
+        
+   Step 3: Modify the pin control pins for the specfic is connected you have to refer Schematic
+   
+   
+                 pinctrl_flx3_default: flx3_default {
+					pinmux = <PIN_PC20__FLEXCOM3_IO0>,
+						 <PIN_PA13__FLEXCOM3_IO1>,
+						 <PIN_PC18__FLEXCOM3_IO2>,
+						 <PIN_PC22__FLEXCOM3_IO4>;
+					bias-disable;
+				};
+      
+      
+      Enable the toolchain first : ./opt/poky-tiny/2.5.2/environment---------------------
+   
+   Step 4: then come to the linux-rba5d2x directory
+   
+            make mrproper 
+            
+   Step 5:  Make distclean
+   Step 6:  Make rb_a5d2x_defconfig
+   Step 7:  Make dtbs
+   Step 8:  Make
+   
+   After the compilation is complited;  Copy the zImage and .dtb file  to your sd card are NOR flash
+   
+                                zImage you will find in : linux-rba5d2x/arch/arm/boot
+                                .dtb you will find in : linux-rba5d2x/arch/arm/boot/dts 
+                                
+                         //* Check after boot the board cd /sys/class /tty/  ttyS5 is present or not
+                                --Then you boot the board the check with loopback programminG--
+                                
+     Connections ; TX of microbus pin to RX pin of Expansion header (PA13) 
+               
+                                                                
+                
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+    
+  
+   
+   
+   
+   
+   
+   
+   
+   
+           
+
+
